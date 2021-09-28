@@ -72,6 +72,15 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     Bitmap bmpThresholdedColor;         //the colorized version of the black and white image
 
     //TODO manage all the permissions you need
+    // Camera is dangerous
+    // write external storage is dangerous
+    // read external storage is dangerous
+    private static final String[] PERMISSIONS = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
+    private static final int PERMS_REQ_CODE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         setContentView(R.layout.activity_main);
 
         //TODO be sure to set up the appbar in the activity
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         //dont display these
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -196,8 +207,28 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         //TODO fill in
 
-        //and return false until they are granted
-        return false;
+        // if all granted then return true
+        boolean allGranted = true;
+        for (String permission : PERMISSIONS){
+            allGranted = allGranted && ( ActivityCompat.checkSelfPermission(this, permission)
+            == PackageManager.PERMISSION_GRANTED );
+        }
+
+        if (!allGranted){
+            // Missing some permissions
+            for (String permission : PERMISSIONS){
+                if ( ActivityCompat.shouldShowRequestPermissionRationale(this, permission) ){
+                    Snackbar.make(findViewById(android.R.id.content),
+                            permission + " please grant this permission to use the app",
+                            Snackbar.LENGTH_LONG).show();
+                }
+            }
+            // ask for permissions
+            requestPermissions(PERMISSIONS, PERMS_REQ_CODE);
+        }
+
+        //and return whether they are granted or not
+        return allGranted;
     }
 
     //take a picture and store it on external storage
@@ -318,8 +349,36 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //TODO handle all of the appbar button clicks
+        int id = item.getItemId();
 
-        return true;
+
+        // Handle each item
+        switch(id){
+            case R.id.action_reset:
+//                Intent myIntent = new Intent(Intent.ACTION_SEND);
+//                myIntent.setType("text/plain");
+//                myIntent.putExtra(Intent.EXTRA_SUBJECT, SHARE_SUBJECT);
+//                myIntent.putExtra(android.content.Intent.EXTRA_TEXT, SHARE_TEXT);
+                Toast.makeText(this, "Action reset pressed", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.action_sketch:
+                Toast.makeText(this, "Action sketch pressed", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.action_colorize:
+                Toast.makeText(this, "Action colorize pressed", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.action_share:
+                Toast.makeText(this, "Action share pressed", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.action_settings:
+                Toast.makeText(this, "Action setting pressed", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //TODO set up pref changes
