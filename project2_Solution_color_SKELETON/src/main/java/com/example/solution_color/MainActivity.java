@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             Manifest.permission.CAMERA
     };
     private static final int PERMS_REQ_CODE = 200;
+    private static final int PERMISSION_REQUEST_CAMERA = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +197,15 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     @Override
     public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults) {
         //TODO fill in
+
+        if (permsRequestCode == PERMISSION_REQUEST_CAMERA){
+            // Request for camera permission
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                // Permission has been granted, start camera preview Activity
+                Toast.makeText(this, "Camera permissions granted", Toast.LENGTH_LONG).show();
+                // *** startCamera(); ***
+            }
+        }
     }
 
     //DUMP for students
