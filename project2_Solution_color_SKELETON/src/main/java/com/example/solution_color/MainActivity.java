@@ -165,7 +165,10 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //get some paths
         // Create the File where the photo should go
         File photoFile = createImageFile(ORIGINAL_FILE);
+        Log.d(DEBUG_TAG, "tried to create photofile");
         originalImagePath = photoFile.getAbsolutePath();
+        // ** Crashes here **
+        Log.d(DEBUG_TAG, "after trying to set original image path");
 
         File processedfile = createImageFile(PROCESSED_FILE);
         processedImagePath=processedfile.getAbsolutePath();
@@ -181,7 +184,23 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     //TODO manage creating a file to store camera image in
     //TODO where photo is stored
     private File createImageFile(final String fn) {
-        //TODO fill in
+        //TODO fill in (started)
+
+        try{
+
+            // get external directories that the media scanner scans
+            File[] storageDir = getExternalMediaDirs();
+
+            // create a file ***** What string do I put here? ****
+            //File imagefile = new File(storageDir[0], ___ )
+
+
+        } catch (IOException ex){
+            Log.d(DEBUG_TAG, "IO Exception in createImageFile");
+            Toast.makeText(this, "IO Exception", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
         return null;
     }
 
