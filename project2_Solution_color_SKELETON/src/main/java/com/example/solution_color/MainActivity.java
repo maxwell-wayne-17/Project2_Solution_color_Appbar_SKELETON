@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -36,6 +37,8 @@ import com.library.bitmap_utilities.BitMap_Helpers;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener {
@@ -189,17 +192,35 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
     //TODO manage creating a file to store camera image in
     //TODO where photo is stored
+    //TODO !!! consider making this variable private !!!
+    String myCurrentPhotoPath;
     private File createImageFile(final String fn) {
         //TODO fill in (started)
 
-
+        // ** FOLLOWED ANDROID GUIDE **
         try{
 
-            // get external directories that the media scanner scans
+            // get external directories that the media scanner scans FROM PERKINS
             File[] storageDir = getExternalMediaDirs();
 
-            // create a file ***** What string do I put here? ****
-            //File imagefile = new File(storageDir[0], ___ )
+            // create a file
+            File imagefile = new File(storageDir[0], fn);
+
+            // make sure directory is there
+            if (!storageDir[0].exists()) {
+                if(!storageDir[0].mkdirs()) {
+                    Log.e(DEBUG_TAG, "createImageFile: failed to create file in: "
+                            + storageDir[0]);
+                    return null;
+                }
+            }
+
+            // make file where image will be stored
+            imagefile.createNewFile();
+
+            // save a file: path for use with ACTION_VIEW intents
+            myCurrentPhotoPath = imagefile.getAbsolutePath();
+            return imagefile;
 
 
         } catch (IOException ex){
@@ -208,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             return null;
         }
 
-        return null;
     }
 
     //DUMP for students
@@ -277,13 +297,27 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             return;
         }
         //TODO manage launching intent to take a picture (done?)
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try{
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        } catch (ActivityNotFoundException e){
-            Log.d(DEBUG_TAG, "doTakePicture: " + e.getMessage());
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null){
+            // Create the file where the photo should go
+            File photoFile = null;
+            try{
+                photoFile = createImageFile(originalImagePath);
+            } catch (Exception e){
+                // error occured while creating the file
+                Log.d(DEBUG_TAG, "doTakePicture: " + e.getMessage());
+            }
+            // continue only if the File was successfully created
+            if (photoFile != null){
+                outputFileUri = FileProvider.getUriForFile(this,
+                        "com.example.solution_color.fileprovider", // CHECK THIS !!!
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
+
     }
 
     //TODO manage return from camera and other activities
@@ -295,9 +329,9 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            //TODO set the myImage equal to the camera image returned
             myImage.setImageBitmap(imageBitmap);
         }
-        //TODO set the myImage equal to the camera image returned
         //TODO tell scanner to pic up this unaltered image
         //TODO save anything needed for later
 
