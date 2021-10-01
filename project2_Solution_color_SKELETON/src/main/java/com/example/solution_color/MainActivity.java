@@ -2,6 +2,7 @@ package com.example.solution_color;
 
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     private static final String ORIGINAL_FILE = "origfile.png";
     private static final String PROCESSED_FILE = "procfile.png";
 
+    //
     private static final int TAKE_PICTURE = 1;
     private static final double SCALE_FROM_0_TO_255 = 2.55;
     private static final int DEFAULT_COLOR_PERCENT = 3;
@@ -71,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     Bitmap bmpThresholded;              //the black and white version of original image
     Bitmap bmpThresholdedColor;         //the colorized version of the black and white image
 
-    //TODO manage all the permissions you need (done)
+    //TODO manage all the permissions you need (not done)
+    //Implement request permissions
     private static final String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     };
     private static final int PERMS_REQ_CODE = 200;
     private static final int PERMISSION_REQUEST_CAMERA = 0;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private SharedPreferences settings;
 
@@ -160,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //TODO do we have needed permissions?
         //TODO if not then dont proceed (done)
         if (!verifyPermissions()){
+            Toast.makeText(this, "setUpFileSystem() does not have permissions",
+                    Toast.LENGTH_LONG).show();
             return;
         }
         //get some paths
@@ -185,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     //TODO where photo is stored
     private File createImageFile(final String fn) {
         //TODO fill in (started)
+
 
         try{
 
@@ -263,10 +270,20 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
     //take a picture and store it on external storage
     public void doTakePicture() {
-        //TODO verify that app has permission to use camera
+        //TODO verify that app has permission to use camera (done)
+        if (!verifyPermissions()){
+            Toast.makeText(this, "doTakePicture() does not have permissions",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        //TODO manage launching intent to take a picture (done?)
 
-        //TODO manage launching intent to take a picture
-
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try{
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e){
+            Log.d(DEBUG_TAG, "doTakePicture: " + e.getMessage());
+        }
     }
 
     //TODO manage return from camera and other activities
@@ -275,9 +292,16 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //TODO get photo
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            myImage.setImageBitmap(imageBitmap);
+        }
         //TODO set the myImage equal to the camera image returned
         //TODO tell scanner to pic up this unaltered image
         //TODO save anything needed for later
+
+
 
     }
 
@@ -288,6 +312,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //TODO verify that app has permission to use file system
         //do we have needed permissions?
         if (!verifyPermissions()) {
+            Toast.makeText(this, "doReset() does not have permissions",
+                    Toast.LENGTH_LONG).show();
             return;
         }
         //delete the files
@@ -312,6 +338,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //TODO verify that app has permission to use file system
         //do we have needed permissions?
         if (!verifyPermissions()) {
+            Toast.makeText(this, "doSketch() does not have permissions",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -334,6 +362,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //TODO verify that app has permission to use file system
         //do we have needed permissions?
         if (!verifyPermissions()) {
+            Toast.makeText(this, "doColorize() does not have permissions",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -367,6 +397,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //TODO verify that app has permission to use file system
         //do we have needed permissions?
         if (!verifyPermissions()) {
+            Toast.makeText(this, "doShare() does not have permissions",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
