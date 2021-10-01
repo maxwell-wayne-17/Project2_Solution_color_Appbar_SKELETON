@@ -71,10 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     Bitmap bmpThresholded;              //the black and white version of original image
     Bitmap bmpThresholdedColor;         //the colorized version of the black and white image
 
-    //TODO manage all the permissions you need
-    // Camera is dangerous
-    // write external storage is dangerous
-    // read external storage is dangerous
+    //TODO manage all the permissions you need (done)
     private static final String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -83,12 +80,14 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     private static final int PERMS_REQ_CODE = 200;
     private static final int PERMISSION_REQUEST_CAMERA = 0;
 
+    private SharedPreferences settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO be sure to set up the appbar in the activity
+        //TODO be sure to set up the appbar in the activity (done)
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         myImage = (ImageView) findViewById(R.id.imageView1);
 
 
-        //TODO manage the preferences and the shared preference listenes
+        //TODO manage the preferences and the shared preference listener
         // TODO and get the values already there getPrefValues(settings);
         //TODO use getPrefValues(SharedPreferences settings)
 
@@ -159,8 +158,10 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
     private void setUpFileSystem(){
         //TODO do we have needed permissions?
-        //TODO if not then dont proceed
-
+        //TODO if not then dont proceed (done)
+        if (!verifyPermissions()){
+            return;
+        }
         //get some paths
         // Create the File where the photo should go
         File photoFile = createImageFile(ORIGINAL_FILE);
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
      */
     @Override
     public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults) {
-        //TODO fill in
+        //TODO fill in (not done)
 
         if (permsRequestCode == PERMISSION_REQUEST_CAMERA){
             // Request for camera permission
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
      */
     private boolean verifyPermissions() {
 
-        //TODO fill in
+        //TODO fill in (done)
 
         // if all granted then return true
         boolean allGranted = true;
@@ -365,26 +366,30 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         // Handle each item
         switch(id){
             case R.id.action_reset:
-//                Intent myIntent = new Intent(Intent.ACTION_SEND);
-//                myIntent.setType("text/plain");
-//                myIntent.putExtra(Intent.EXTRA_SUBJECT, SHARE_SUBJECT);
-//                myIntent.putExtra(android.content.Intent.EXTRA_TEXT, SHARE_TEXT);
                 Toast.makeText(this, "Action reset pressed", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.action_sketch:
+                //doSketch();
                 Toast.makeText(this, "Action sketch pressed", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.action_colorize:
+                //doColorize();
                 Toast.makeText(this, "Action colorize pressed", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.action_share:
+//                Intent myIntent = new Intent(Intent.ACTION_SEND);
+//                myIntent.setType("text/plain");
+//                myIntent.putExtra(Intent.EXTRA_SUBJECT, SHARE_SUBJECT);
+//                myIntent.putExtra(android.content.Intent.EXTRA_TEXT, SHARE_TEXT);
                 Toast.makeText(this, "Action share pressed", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.action_settings:
+//                Intent myIntent = new Intent(this, SettingsActivity.class);
+//                startActivity(myIntent);
                 Toast.makeText(this, "Action setting pressed", Toast.LENGTH_SHORT).show();
                 break;
         }
