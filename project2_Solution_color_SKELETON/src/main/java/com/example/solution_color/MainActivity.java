@@ -87,7 +87,9 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     private static final int PERMISSION_REQUEST_CAMERA = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private SharedPreferences settings;
+    private SharedPreferences myPreference;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener = null;
+    private boolean enablePreferenceListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             @Override
             public void onClick(View view) {
                 //TODO manage this, mindful of permissions
-
+                doTakePicture();
             }
         });
 
@@ -197,14 +199,15 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     private File createImageFile(final String fn) {
         //TODO fill in (started)
 
-        // ** FOLLOWED ANDROID GUIDE **
         try{
 
             // get external directories that the media scanner scans FROM PERKINS
             File[] storageDir = getExternalMediaDirs();
+            Log.d(DEBUG_TAG, "createImageFile made storageDir");
 
             // create a file
             File imagefile = new File(storageDir[0], fn);
+            Log.d(DEBUG_TAG, "createImageFile made imagefile");
 
             // make sure directory is there
             if (!storageDir[0].exists()) {
@@ -216,7 +219,9 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             }
 
             // make file where image will be stored
+            Log.d(DEBUG_TAG, "createImageFile before createNewFile "+ imagefile.exists() );
             imagefile.createNewFile();
+            Log.d(DEBUG_TAG, "createImageFile made new file");
 
             // save a file: path for use with ACTION_VIEW intents
             myCurrentPhotoPath = imagefile.getAbsolutePath();
@@ -225,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         } catch (IOException ex){
             Log.d(DEBUG_TAG, "IO Exception in createImageFile");
-            Toast.makeText(this, "IO Exception", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "IO Exception " + ex.getMessage(), Toast.LENGTH_SHORT).show();
             return null;
         }
 
@@ -475,6 +480,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             case R.id.action_settings:
 //                Intent myIntent = new Intent(this, SettingsActivity.class);
 //                startActivity(myIntent);
+
                 Toast.makeText(this, "Action setting pressed", Toast.LENGTH_SHORT).show();
                 break;
         }
