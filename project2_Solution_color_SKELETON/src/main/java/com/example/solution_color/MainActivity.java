@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
     private SharedPreferences myPreference;
     private SharedPreferences.OnSharedPreferenceChangeListener listener = null;
-    private boolean enablePreferenceListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +118,19 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //TODO manage the preferences and the shared preference listener
         // TODO and get the values already there getPrefValues(settings);
         //TODO use getPrefValues(SharedPreferences settings)
+        if (myPreference == null){
+            myPreference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        }
+        if (listener == null){
+            listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                    getPrefValues(myPreference);
+                }
+            };
+        }
+
+        myPreference.registerOnSharedPreferenceChangeListener(listener);
 
         // Fetch screen height and width,
         DisplayMetrics metrics = this.getResources().getDisplayMetrics();
@@ -145,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             return;
         }
 
-        //worst case get from default image
+        //worst case get from default
         //save this for restoring
         bmpOriginal = BitMap_Helpers.copyBitmap(myImage.getDrawable());
         Log.d(DEBUG_TAG, "setImage: bmpOriginal copied");
@@ -155,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     //TODO Please ensure that this function is called by your preference change listener
     private void getPrefValues(SharedPreferences settings) {
         //TODO should track shareSubject, shareText, saturation, bwPercent
+
+        shareSubject = settings.getString("share_sub", "");
+        shareText = settings.getString("share_text", "");
+        bwPercent = settings.getInt("set_sketch_bar", DEFAULT_BW_PERCENT);
+        saturation = settings.getInt("set_color_bar", DEFAULT_COLOR_PERCENT);
 
     }
 
@@ -355,6 +372,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
 
 
+
     }
 
     /**
@@ -481,6 +499,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
                 break;
 
             case R.id.action_share:
+                // This should all be done in do share
 //                Intent myIntent = new Intent(Intent.ACTION_SEND);
 //                myIntent.setType("text/plain");
 //                myIntent.putExtra(Intent.EXTRA_SUBJECT, SHARE_SUBJECT);
@@ -489,10 +508,16 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
                 break;
 
             case R.id.action_settings:
+                // TODO put this in doSettings button ??
                 Intent myIntent = new Intent(this, SettingsActivity.class);
                 startActivity(myIntent);
 
-                Toast.makeText(this, "Action setting pressed", Toast.LENGTH_SHORT).show();
+                // Set up preference stuff
+                if (myPreference == null){
+                    myPreference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                }
+
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -502,6 +527,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     @Override
     public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
         //TODO reload prefs at this point
+        Log.d(DEBUG_TAG, "onSharedPreferenceChanged called, key is = " + arg1);
+
     }
 
     /**
