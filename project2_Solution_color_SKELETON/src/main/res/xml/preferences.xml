@@ -2,6 +2,46 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
+    <!--    TODO export all string resources-->
+    <PreferenceCategory app:title="Share Options">
+
+        <EditTextPreference
+            app:key="share_sub"
+            app:title="Share Subject"
+            app:summary="This is the subject of the message you would like to share"
+        />
+
+        <EditTextPreference
+            app:key="share_txt"
+            app:title="Share Text"
+            app:summary="This is the text you would like to share"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Rendering Options"
+        app:summary="Level of sketchiness and color saturation">
+
+        <SeekBarPreference
+            android:key="set_sketch_bar"
+            android:title="Sketchiness"
+            app:summary="Set BW threshold, higher numbers correspond to less detail and a whiter image"
+            app:showSeekBarValue="true"
+            app:defaultValue="15"
+            />
+
+        <SeekBarPreference
+            android:key="set_color_bar"
+            android:title="Saturation"
+            app:summary="Set color saturation, higher numbers correspond to more colorful images"
+            app:showSeekBarValue="true"
+            app:defaultValue="3"
+            />
+
+
+    </PreferenceCategory>
+
+
 
     
 </PreferenceScreen>

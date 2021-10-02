@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     //TODO Please ensure that this function is called by your preference change listener
     private void getPrefValues(SharedPreferences settings) {
         //TODO should track shareSubject, shareText, saturation, bwPercent
+
     }
 
     @Override
@@ -465,7 +466,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //TODO handle all of the appbar button clicks
         int id = item.getItemId();
 
-
         // Handle each item
         switch(id){
             case R.id.action_reset:
@@ -489,8 +489,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
                 break;
 
             case R.id.action_settings:
-//                Intent myIntent = new Intent(this, SettingsActivity.class);
-//                startActivity(myIntent);
+                Intent myIntent = new Intent(this, SettingsActivity.class);
+                startActivity(myIntent);
 
                 Toast.makeText(this, "Action setting pressed", Toast.LENGTH_SHORT).show();
                 break;
