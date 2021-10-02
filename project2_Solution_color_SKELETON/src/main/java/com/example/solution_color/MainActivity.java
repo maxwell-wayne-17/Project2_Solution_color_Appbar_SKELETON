@@ -331,13 +331,25 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //TODO get photo
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            //TODO set the myImage equal to the camera image returned
-            myImage.setImageBitmap(imageBitmap);
-        }
+
+        // ** FROM ANDROID, TRYING PERKINS METHOD
+//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+//            //Bundle extras = data.getExtras(); ** From android
+//            //Bitmap imageBitmap = (Bitmap) extras.get("data"); ** From android
+//            //TODO set the myImage equal to the camera image returned
+//            myImage.setImageBitmap(imageBitmap);
+//        }
         //TODO tell scanner to pic up this unaltered image
+        if (requestCode == TAKE_PICTURE && resultCode == RESULT_OK){
+            setImage();
+            scanSavedMediaFile(myCurrentPhotoPath);
+        }
+        else{
+            Log.d(DEBUG_TAG, "OnActivityResult requestCode = " + requestCode
+            + " should be = " + TAKE_PICTURE);
+            Log.d(DEBUG_TAG, "OnActivityResult resultCode = " + resultCode
+                    + " should be = " + RESULT_OK);
+        }
         //TODO save anything needed for later
 
 
@@ -369,7 +381,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         //save this for restoring
         bmpOriginal = BitMap_Helpers.copyBitmap(myImage.getDrawable());
 
-        //TODO make media scanner pick up that images are gone
+        //TODO make media scanner pick up that images are gone ??
+        scanSavedMediaFile(myCurrentPhotoPath);
 
     }
 
@@ -456,17 +469,15 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         // Handle each item
         switch(id){
             case R.id.action_reset:
-                Toast.makeText(this, "Action reset pressed", Toast.LENGTH_SHORT).show();
+                doReset();
                 break;
 
             case R.id.action_sketch:
-                //doSketch();
-                Toast.makeText(this, "Action sketch pressed", Toast.LENGTH_SHORT).show();
+                doSketch();
                 break;
 
             case R.id.action_colorize:
-                //doColorize();
-                Toast.makeText(this, "Action colorize pressed", Toast.LENGTH_SHORT).show();
+                doColorize();
                 break;
 
             case R.id.action_share:
