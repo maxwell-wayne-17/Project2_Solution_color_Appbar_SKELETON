@@ -175,8 +175,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         }
         //get some paths
         // Create the File where the photo should go
+        Log.d(DEBUG_TAG, "setUpFileSystem calling createImageFile with ORIGINAL_FILE");
         File photoFile = createImageFile(ORIGINAL_FILE);
-        Log.d(DEBUG_TAG, "tried to create photofile");
         originalImagePath = photoFile.getAbsolutePath();
         // ** Crashes here **
         Log.d(DEBUG_TAG, "after trying to set original image path");
@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     //TODO where photo is stored
     //TODO !!! consider making this variable private !!!
     String myCurrentPhotoPath;
+    // ** what is purpose of the string parameter?  Should it be either originalFile or Processed file? **
     private File createImageFile(final String fn) {
         //TODO fill in (started)
 
@@ -203,11 +204,9 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
             // get external directories that the media scanner scans FROM PERKINS
             File[] storageDir = getExternalMediaDirs();
-            Log.d(DEBUG_TAG, "createImageFile made storageDir");
 
             // create a file
             File imagefile = new File(storageDir[0], fn);
-            Log.d(DEBUG_TAG, "createImageFile made imagefile");
 
             // make sure directory is there
             if (!storageDir[0].exists()) {
@@ -308,7 +307,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             // Create the file where the photo should go
             File photoFile = null;
             try{
-                photoFile = createImageFile(originalImagePath);
+                Log.d(DEBUG_TAG, "doTakePicture calling createImageFile with ORIGINAL_FILE");
+                photoFile = createImageFile(ORIGINAL_FILE);
             } catch (Exception e){
                 // error occured while creating the file
                 Log.d(DEBUG_TAG, "doTakePicture: " + e.getMessage());
