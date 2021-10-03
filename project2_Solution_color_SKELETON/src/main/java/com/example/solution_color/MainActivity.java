@@ -242,6 +242,14 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
             // save a file: path for use with ACTION_VIEW intents
             myCurrentPhotoPath = imagefile.getAbsolutePath();
+            // set outputFileUri so send can share image without taking a new picture
+//            outputFileUri = new Uri.Builder().scheme( imagefile.toURI().getScheme() )
+//                    .encodedAuthority( imagefile.toURI().getRawAuthority() )
+//                    .encodedPath( imagefile.toURI().getRawPath() )
+//                    .query( imagefile.toURI().getRawQuery() )
+//                    .fragment( imagefile.toURI().getRawFragment() )
+//                    .build();
+
             return imagefile;
 
 
@@ -334,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             // continue only if the File was successfully created
             if (photoFile != null){
                 outputFileUri = FileProvider.getUriForFile(this,
-                        "com.example.solution_color.fileprovider", // CHECK THIS !!!
+                        "com.example.solution_color.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
