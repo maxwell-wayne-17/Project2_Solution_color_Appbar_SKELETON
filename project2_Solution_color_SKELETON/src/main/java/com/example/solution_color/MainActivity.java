@@ -475,6 +475,13 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
 
         //TODO share the processed image with appropriate subject, text and file URI
         //TODO the subject and text should come from the preferences set in the Settings Activity
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        myIntent.putExtra(Intent.EXTRA_STREAM, outputFileUri);
+        myIntent.setType("text/plain");
+        myIntent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+        myIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+
+        startActivity(Intent.createChooser(myIntent, "Send Email"));
 
     }
 
@@ -499,12 +506,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
                 break;
 
             case R.id.action_share:
-                // This should all be done in do share
-//                Intent myIntent = new Intent(Intent.ACTION_SEND);
-//                myIntent.setType("text/plain");
-//                myIntent.putExtra(Intent.EXTRA_SUBJECT, SHARE_SUBJECT);
-//                myIntent.putExtra(android.content.Intent.EXTRA_TEXT, SHARE_TEXT);
-                Toast.makeText(this, "Action share pressed", Toast.LENGTH_SHORT).show();
+                doShare();
                 break;
 
             case R.id.action_settings:
