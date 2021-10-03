@@ -2,38 +2,38 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <!--    TODO export all string resources-->
-    <PreferenceCategory app:title="Share Options">
+
+    <PreferenceCategory app:title="@string/share_options_title">
 
         <EditTextPreference
-            app:key="share_sub"
-            app:title="Share Subject"
-            app:summary="This is the subject of the message you would like to share"
+            app:key="@string/subject_key"
+            app:title="@string/subject_pref_title"
+            app:summary="@string/subject_summary"
         />
 
         <EditTextPreference
-            app:key="share_txt"
-            app:title="Share Text"
-            app:summary="This is the text you would like to share"
+            app:key="@string/text_key"
+            app:title="@string/text_pref_title"
+            app:summary="@string/text_summary"
             />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Rendering Options"
-        app:summary="Level of sketchiness and color saturation">
+    <PreferenceCategory app:title="@string/render_options_title"
+        app:summary="@string/render_summary">
 
         <SeekBarPreference
-            android:key="set_sketch_bar"
-            android:title="Sketchiness"
-            app:summary="Set BW threshold, higher numbers correspond to less detail and a whiter image"
+            android:key="@string/sketch_key"
+            android:title="@string/sketch_pref_title"
+            app:summary="@string/sketch_summary"
             app:showSeekBarValue="true"
             app:defaultValue="15"
             />
 
         <SeekBarPreference
-            android:key="set_color_bar"
-            android:title="Saturation"
-            app:summary="Set color saturation, higher numbers correspond to more colorful images"
+            android:key="@string/color_key"
+            android:title="@string/color_pref_title"
+            app:summary="@string/color_summary"
             app:showSeekBarValue="true"
             app:defaultValue="3"
             />

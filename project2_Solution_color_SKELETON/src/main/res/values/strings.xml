@@ -7,5 +7,21 @@
     <string name="colorize_button">Colorize</string>
     <string name="share_button">Share</string>
     <string name="settings_button">Settings</string>
+    <string name="share_options_title">Share Options</string>
+    <string name="subject_key">share_sub</string>
+    <string name="subject_pref_title">Share Subject</string>
+    <string name="subject_summary">This is the subject of the message you would like to share</string>
+    <string name="text_summary">This is the text you would like to share</string>
+    <string name="text_key">share_txt</string>
+    <string name="text_pref_title">Share Text</string>
+    <string name="render_options_title">Rendering Options</string>
+    <string name="render_summary">Level of sketchiness and color saturation</string>
+    <string name="sketch_key">set_sketch_bar</string>
+    <string name="sketch_pref_title">Sketchiness</string>
+    <string name="sketch_summary">Set BW threshold, higher numbers correspond to less detail and a whiter image</string>
+    <string name="color_key">set_color_bar</string>
+    <string name="color_pref_title">Saturation</string>
+    <string name="color_summary">Set color saturation, higher numbers correspond to more colorful images</string>
+
 
 </resources>

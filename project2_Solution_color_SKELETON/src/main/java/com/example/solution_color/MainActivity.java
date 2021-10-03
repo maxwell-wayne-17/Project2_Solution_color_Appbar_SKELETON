@@ -145,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         bmpThresholded = Camera_Helpers.loadAndScaleImage(processedImagePath, screenheight, screenwidth);
         if (bmpThresholded != null) {
             myImage.setImageBitmap(bmpThresholded);
-            Log.d(DEBUG_TAG, "setImage: myImage.setImageBitmap(bmpThresholded) set");
             return;
         }
 
@@ -153,14 +152,12 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         bmpOriginal = Camera_Helpers.loadAndScaleImage(originalImagePath, screenheight, screenwidth);
         if (bmpOriginal != null) {
             myImage.setImageBitmap(bmpOriginal);
-            Log.d(DEBUG_TAG, "setImage: myImage.setImageBitmap(bmpOriginal) set");
             return;
         }
 
         //worst case get from default
         //save this for restoring
         bmpOriginal = BitMap_Helpers.copyBitmap(myImage.getDrawable());
-        Log.d(DEBUG_TAG, "setImage: bmpOriginal copied");
     }
 
     //TODO use this to set the following member preferences whenever preferences are changed.
@@ -168,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     private void getPrefValues(SharedPreferences settings) {
         //TODO should track shareSubject, shareText, saturation, bwPercent
 
-        shareSubject = settings.getString("share_sub", "");
-        shareText = settings.getString("share_text", "");
+        shareSubject = settings.getString("share_sub", getString(R.string.shareTitle));
+        shareText = settings.getString("share_text", getString(R.string.sharemessage));
         bwPercent = settings.getInt("set_sketch_bar", DEFAULT_BW_PERCENT);
         saturation = settings.getInt("set_color_bar", DEFAULT_COLOR_PERCENT);
 
@@ -193,11 +190,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
         }
         //get some paths
         // Create the File where the photo should go
-        Log.d(DEBUG_TAG, "setUpFileSystem calling createImageFile with ORIGINAL_FILE");
         File photoFile = createImageFile(ORIGINAL_FILE);
         originalImagePath = photoFile.getAbsolutePath();
-        // ** Crashes here **
-        Log.d(DEBUG_TAG, "after trying to set original image path");
 
         File processedfile = createImageFile(PROCESSED_FILE);
         processedImagePath=processedfile.getAbsolutePath();
@@ -236,19 +230,10 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             }
 
             // make file where image will be stored
-            Log.d(DEBUG_TAG, "createImageFile before createNewFile "+ imagefile.exists() );
             imagefile.createNewFile();
-            Log.d(DEBUG_TAG, "createImageFile made new file");
 
             // save a file: path for use with ACTION_VIEW intents
             myCurrentPhotoPath = imagefile.getAbsolutePath();
-            // set outputFileUri so send can share image without taking a new picture
-//            outputFileUri = new Uri.Builder().scheme( imagefile.toURI().getScheme() )
-//                    .encodedAuthority( imagefile.toURI().getRawAuthority() )
-//                    .encodedPath( imagefile.toURI().getRawPath() )
-//                    .query( imagefile.toURI().getRawQuery() )
-//                    .fragment( imagefile.toURI().getRawFragment() )
-//                    .build();
 
             return imagefile;
 
@@ -333,11 +318,10 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
             // Create the file where the photo should go
             File photoFile = null;
             try{
-                Log.d(DEBUG_TAG, "doTakePicture calling createImageFile with ORIGINAL_FILE");
                 photoFile = createImageFile(ORIGINAL_FILE);
             } catch (Exception e){
                 // error occured while creating the file
-                Log.d(DEBUG_TAG, "doTakePicture: " + e.getMessage());
+                Log.e(DEBUG_TAG, "doTakePicture: " + e.getMessage());
             }
             // continue only if the File was successfully created
             if (photoFile != null){
@@ -357,14 +341,7 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //TODO get photo
-
-        // ** FROM ANDROID, TRYING PERKINS METHOD
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            //Bundle extras = data.getExtras(); ** From android
-//            //Bitmap imageBitmap = (Bitmap) extras.get("data"); ** From android
-//            //TODO set the myImage equal to the camera image returned
-//            myImage.setImageBitmap(imageBitmap);
-//        }
+        //TODO set the myImage equal to the camera image returned
         //TODO tell scanner to pic up this unaltered image
         if (requestCode == TAKE_PICTURE && resultCode == RESULT_OK){
             setImage();
@@ -377,9 +354,6 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
                     + " should be = " + RESULT_OK);
         }
         //TODO save anything needed for later
-
-
-
 
     }
 
@@ -518,16 +492,8 @@ public class MainActivity extends AppCompatActivity implements OnSharedPreferenc
                 break;
 
             case R.id.action_settings:
-                // TODO put this in doSettings button ??
                 Intent myIntent = new Intent(this, SettingsActivity.class);
                 startActivity(myIntent);
-
-                // Set up preference stuff
-                if (myPreference == null){
-                    myPreference = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                }
-
-
                 break;
         }
         return super.onOptionsItemSelected(item);
